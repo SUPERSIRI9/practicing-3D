@@ -1,67 +1,35 @@
-import * as   THREE from 'three';
-import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import * as THREE from 'three';
+//create a scene 
+const scene = new THREE.Scene();
+scene.background= new THREE.Color('#F0F0F0');
 
-const canvas= document.getElementById('canvas');//to interact with the scene 
+//add the camera
+const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000) //75 FOV ,aspect ratio=window by dividing ,near and far planes 
+camera.position.z = 5;
 
-//scene creation
-const scene= new THREE.Scene();
-scene.background = new THREE.Color('#F0F0F0');
+//create and add objh
+const geometry = new THREE.BoxGeometry()
+const material = new THREE.MeshLambertMaterial({color:'#456789',emissive:'#456789'}) //deefault emmisive is black and wont react with light
+const cube = new THREE.Mesh(geometry,material);
+scene.add (cube);
 
-//csmera
-const camera=new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.z=5;
+//add light
+const light=new THREE.DirectionalLight(0x9CDBA6, 10)//9cdba6 = color,10= intensity
+light.position.set(0,5,5);
+scene.add(light)
 
-//object
-const geometry =new THREE.DodecahedronGeometry();
-const material = new THREE.MeshLambertMaterial({color:'#468585',emissive:'#468585'});
-const dodecahedron = new THREE.Mesh(geometry,material);//mesh
+//add renderer
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-const boxgeometry =new THREE.BoxGeometry(2, 0.2, 2);
-const boxmaterial = new THREE.MeshLambertMaterial({color:'#B6B6B7',emissive:'#B6B6B7'});
-const box = new THREE.Mesh(boxgeometry,boxmaterial);//mesh
-box.position.y = -1.8;
-
-scene.add(dodecahedron);
-scene.add(box);
+//animate the scene
 
 
-//light
-const light = new THREE.PointLight(0x006769, 100);
-light.position.set(1,1,1);
-scene.add(light);
-
-//renderer
-const renderer=new THREE.WebGLRenderer({canvas});
-renderer.setSize(window.innerWidth ,window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);//adjusting pixel ratio according to device
-
-//add orbit controls
-const controls =new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;//to smooth controls 
-controls.dampingFactor=0.05;
-controls.enableZoom=true;//enable zoom
-controls.enablePan=true;//for pan
-
-//animation
-function animate(){
-    requestAnimationFrame(animate);
-    dodecahedron.rotation.x += 0.01;
-    dodecahedron.rotation.y += 0.005;
-    box.rotation.y += 0.005;
-    
-    controls.update();
+function animate(){ //write animations here
+    requestAnimationFrame(animate); //request animations as animate
+    cube.rotation.x += 0.01 ;//rotation in x axis
+    cube.rotation.y += 0.01;
     renderer.render(scene,camera);
-    
-
 }
-//handle window resizing 
-window.addEventListener('resize',()=>
-    {
-    camera.aspect=window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth,window.innerHeight)
-
-
-    });
-
 animate();
