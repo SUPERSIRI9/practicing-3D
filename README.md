@@ -1,7 +1,8 @@
 # practicing-3D
 just tried to make a 3d interactable website with Dodecahedron
 
-notes
+notes:
+
 make a folder and add a html file to it
 add html base code from installation tab of three.js doc 
 add a javascript file named main.js
